@@ -1,0 +1,6 @@
+{
+  "name": "FixBoard",
+  "description": "منصة احترافية لمخططات صيانة الهواتف الذكية وBoardview وتتبع المسارات والمكونات",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

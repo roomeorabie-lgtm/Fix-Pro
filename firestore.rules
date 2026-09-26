@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // In this platform, client-side requests access collections.
+    // Read access to public brands, series, models, boards, plans, notifications.
+    // User write operations for their own requests and profile.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

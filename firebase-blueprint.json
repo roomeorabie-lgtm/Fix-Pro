@@ -1,0 +1,158 @@
+{
+  "entities": {
+    "Brand": {
+      "title": "Brand",
+      "description": "Smartphone manufacturer entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "slug"]
+    },
+    "Series": {
+      "title": "Series",
+      "description": "Brand product series line",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "brandId": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "brandId", "name"]
+    },
+    "DeviceModel": {
+      "title": "DeviceModel",
+      "description": "Specific smartphone model specifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "brandId": { "type": "string" },
+        "seriesId": { "type": "string" },
+        "name": { "type": "string" },
+        "modelNumber": { "type": "string" },
+        "regionVariant": { "type": "string" },
+        "technicalSpecs": { "type": "object" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "brandId", "name"]
+    },
+    "Board": {
+      "title": "Board",
+      "description": "Motherboard / PCB representation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "modelName": { "type": "string" },
+        "boardNumber": { "type": "string" },
+        "revision": { "type": "string" },
+        "hasSchematic": { "type": "boolean" },
+        "hasBoardview": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "deviceId", "boardNumber"]
+    },
+    "SchematicDocument": {
+      "title": "SchematicDocument",
+      "description": "Schematic PDF technical document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "boardId": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "title": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "fileName": { "type": "string" },
+        "canDownload": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "boardId", "fileUrl"]
+    },
+    "BoardComponent": {
+      "title": "BoardComponent",
+      "description": "Electronic component on PCB layer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "boardId": { "type": "string" },
+        "reference": { "type": "string" },
+        "type": { "type": "string" },
+        "value": { "type": "string" },
+        "partNumber": { "type": "string" },
+        "description": { "type": "string" },
+        "layer": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "connectedNets": { "type": "array" }
+      },
+      "required": ["id", "boardId", "reference", "layer"]
+    },
+    "BoardNet": {
+      "title": "BoardNet",
+      "description": "Signal or power net trace on board",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "boardId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "connectedComponents": { "type": "array" }
+      },
+      "required": ["id", "boardId", "name"]
+    },
+    "TestPoint": {
+      "title": "TestPoint",
+      "description": "Hardware testing pad on board",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "boardId": { "type": "string" },
+        "reference": { "type": "string" },
+        "netName": { "type": "string" },
+        "layer": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "required": ["id", "boardId", "reference", "netName"]
+    }
+  },
+  "firestore": {
+    "/brands/{brandId}": {
+      "schema": "Brand",
+      "description": "Smartphone manufacturers"
+    },
+    "/series/{seriesId}": {
+      "schema": "Series",
+      "description": "Product series hierarchy"
+    },
+    "/models/{modelId}": {
+      "schema": "DeviceModel",
+      "description": "Smartphone model entries"
+    },
+    "/boards/{boardId}": {
+      "schema": "Board",
+      "description": "Motherboards and PCB revisions"
+    },
+    "/schematics/{schematicId}": {
+      "schema": "SchematicDocument",
+      "description": "Schematic documents linked to boards"
+    },
+    "/components/{componentId}": {
+      "schema": "BoardComponent",
+      "description": "Hardware components on PCBs"
+    },
+    "/nets/{netId}": {
+      "schema": "BoardNet",
+      "description": "Signals and power nets"
+    },
+    "/test_points/{testPointId}": {
+      "schema": "TestPoint",
+      "description": "Test points and voltage rails"
+    }
+  }
+}
