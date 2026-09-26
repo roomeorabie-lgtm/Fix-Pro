@@ -835,10 +835,26 @@ export async function getComponentsByBoard(boardId: string, layer?: 'top' | 'bot
 
 export async function createBoardComponent(compData: Omit<BoardComponent, 'id'>): Promise<string> {
   const docRef = doc(collection(db, 'components'));
-  await setDoc(docRef, {
-    ...compData,
-    id: docRef.id
-  });
+  const sanitized: Record<string, any> = {
+    id: docRef.id,
+    boardId: compData.boardId,
+    reference: compData.reference,
+    type: compData.type,
+    layer: compData.layer,
+    x: compData.x,
+    y: compData.y
+  };
+  if (compData.value !== undefined) sanitized.value = compData.value;
+  if (compData.partNumber !== undefined) sanitized.partNumber = compData.partNumber;
+  if (compData.description !== undefined) sanitized.description = compData.description;
+  if (compData.width !== undefined) sanitized.width = compData.width;
+  if (compData.height !== undefined) sanitized.height = compData.height;
+  if (compData.rotation !== undefined) sanitized.rotation = compData.rotation;
+  if (compData.datasheetUrl !== undefined) sanitized.datasheetUrl = compData.datasheetUrl;
+  if (compData.connectedNets !== undefined) sanitized.connectedNets = compData.connectedNets;
+  if (compData.notes !== undefined) sanitized.notes = compData.notes;
+
+  await setDoc(docRef, sanitized);
   return docRef.id;
 }
 
@@ -870,10 +886,18 @@ export async function getNetsByBoard(boardId: string): Promise<BoardNet[]> {
 
 export async function createBoardNet(netData: Omit<BoardNet, 'id'>): Promise<string> {
   const docRef = doc(collection(db, 'nets'));
-  await setDoc(docRef, {
-    ...netData,
-    id: docRef.id
-  });
+  const sanitized: Record<string, any> = {
+    id: docRef.id,
+    boardId: netData.boardId,
+    name: netData.name
+  };
+  if (netData.type !== undefined) sanitized.type = netData.type;
+  if (netData.voltage !== undefined) sanitized.voltage = netData.voltage;
+  if (netData.sourceComponent !== undefined) sanitized.sourceComponent = netData.sourceComponent;
+  if (netData.connectedComponents !== undefined) sanitized.connectedComponents = netData.connectedComponents;
+  if (netData.notes !== undefined) sanitized.notes = netData.notes;
+
+  await setDoc(docRef, sanitized);
   return docRef.id;
 }
 
@@ -915,10 +939,20 @@ export async function getTestPointsByBoard(boardId: string, layer?: 'top' | 'bot
 
 export async function createTestPoint(tpData: Omit<TestPoint, 'id'>): Promise<string> {
   const docRef = doc(collection(db, 'test_points'));
-  await setDoc(docRef, {
-    ...tpData,
-    id: docRef.id
-  });
+  const sanitized: Record<string, any> = {
+    id: docRef.id,
+    boardId: tpData.boardId,
+    reference: tpData.reference,
+    netName: tpData.netName,
+    layer: tpData.layer,
+    x: tpData.x,
+    y: tpData.y
+  };
+  if (tpData.expectedVoltage !== undefined) sanitized.expectedVoltage = tpData.expectedVoltage;
+  if (tpData.expectedDiodeValue !== undefined) sanitized.expectedDiodeValue = tpData.expectedDiodeValue;
+  if (tpData.notes !== undefined) sanitized.notes = tpData.notes;
+
+  await setDoc(docRef, sanitized);
   return docRef.id;
 }
 

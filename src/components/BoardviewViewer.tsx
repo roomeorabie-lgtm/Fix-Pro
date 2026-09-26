@@ -529,24 +529,56 @@ export const BoardviewViewer: React.FC<BoardviewViewerProps> = ({
                       </span>
                     </div>
 
-                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
-                      <p className="text-slate-400">
-                        القطع المتصلة بهذا المسار (مظللة على البوردة):
-                      </p>
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {components
-                          .filter((c) => c.connectedNets?.includes(highlightedNet))
-                          .map((c) => (
-                            <button
-                              key={c.id}
-                              onClick={() => selectComponent(c)}
-                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-[11px]"
-                            >
-                              {c.reference}
-                            </button>
-                          ))}
-                      </div>
-                    </div>
+                    {/* Net Details (Voltage, Rail Type, Source) */}
+                    {(() => {
+                      const netObj = nets.find((n) => n.name === highlightedNet);
+                      return (
+                        <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
+                          {netObj?.voltage && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">الجهد الاسمي (Voltage):</span>
+                              <span className="font-mono text-emerald-400 font-bold">{netObj.voltage}</span>
+                            </div>
+                          )}
+                          {netObj?.type && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">نوع المسار (Rail):</span>
+                              <span className="font-mono text-slate-200 uppercase">{netObj.type}</span>
+                            </div>
+                          )}
+                          {netObj?.sourceComponent && (
+                            <div className="pt-1.5 border-t border-slate-800/80">
+                              <span className="text-slate-400 block mb-0.5">المصدر (Source Rail):</span>
+                              <span className="font-mono text-slate-300 text-[11px]">{netObj.sourceComponent}</span>
+                            </div>
+                          )}
+                          {netObj?.notes && (
+                            <div className="pt-1.5 border-t border-slate-800/80">
+                              <span className="text-slate-400 block mb-0.5">الملاحظات الهندسية:</span>
+                              <p className="text-slate-300 text-[11px]">{netObj.notes}</p>
+                            </div>
+                          )}
+                          <div className="pt-2 border-t border-slate-800/80">
+                            <p className="text-slate-400 mb-1.5">
+                              القطع المتصلة بهذا المسار (مظللة على البوردة):
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {components
+                                .filter((c) => c.connectedNets?.includes(highlightedNet))
+                                .map((c) => (
+                                  <button
+                                    key={c.id}
+                                    onClick={() => selectComponent(c)}
+                                    className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-[11px]"
+                                  >
+                                    {c.reference}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     <button
                       onClick={() => setHighlightedNet(null)}

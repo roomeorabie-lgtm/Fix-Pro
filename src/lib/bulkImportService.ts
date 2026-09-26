@@ -33,6 +33,7 @@ import {
   VERIFIED_TEST_POINTS,
   SeedDeviceEntry
 } from '../data/verifiedSmartphoneCatalog';
+import { AUTHENTIC_HARDWARE_DATASETS } from '../data/authenticHardwareDatasets';
 
 /**
  * Parses raw file content (JSON or CSV) into structured preview items.
@@ -419,61 +420,70 @@ export async function seedVerifiedCatalogIntoFirestore(): Promise<ImportBatchRes
 
     const hardwareBatch = writeBatch(db);
 
-    // Seed verified components
-    for (const comp of VERIFIED_BOARD_COMPONENTS) {
-      const bId = boardMap.get(comp.boardNumber);
+    // Seed verified authentic hardware datasets
+    for (const dataset of AUTHENTIC_HARDWARE_DATASETS) {
+      const bId = boardMap.get(dataset.boardNumber);
       if (bId) {
-        const compRef = doc(collection(db, 'components'));
-        const compData: BoardComponent = {
-          id: compRef.id,
-          boardId: bId,
-          reference: comp.reference,
-          type: comp.type,
-          value: comp.value,
-          partNumber: comp.partNumber,
-          description: comp.description,
-          layer: comp.layer,
-          x: comp.x,
-          y: comp.y,
-          connectedNets: comp.connectedNets
-        };
-        hardwareBatch.set(compRef, compData);
-      }
-    }
+        // Components
+        for (const comp of dataset.components) {
+          const compRef = doc(collection(db, 'components'));
+          const compData: Record<string, any> = {
+            id: compRef.id,
+            boardId: bId,
+            reference: comp.reference,
+            type: comp.type,
+            layer: comp.layer,
+            x: comp.x,
+            y: comp.y
+          };
+          if (comp.value !== undefined) compData.value = comp.value;
+          if (comp.partNumber !== undefined) compData.partNumber = comp.partNumber;
+          if (comp.description !== undefined) compData.description = comp.description;
+          if (comp.width !== undefined) compData.width = comp.width;
+          if (comp.height !== undefined) compData.height = comp.height;
+          if (comp.rotation !== undefined) compData.rotation = comp.rotation;
+          if (comp.datasheetUrl !== undefined) compData.datasheetUrl = comp.datasheetUrl;
+          if (comp.connectedNets !== undefined) compData.connectedNets = comp.connectedNets;
+          if (comp.notes !== undefined) compData.notes = comp.notes;
 
-    // Seed verified nets
-    for (const net of VERIFIED_NETS) {
-      const bId = boardMap.get(net.boardNumber);
-      if (bId) {
-        const netRef = doc(collection(db, 'nets'));
-        const netData: BoardNet = {
-          id: netRef.id,
-          boardId: bId,
-          name: net.name,
-          type: net.type,
-          connectedComponents: net.connectedComponents
-        };
-        hardwareBatch.set(netRef, netData);
-      }
-    }
+          hardwareBatch.set(compRef, compData);
+        }
 
-    // Seed verified test points
-    for (const tp of VERIFIED_TEST_POINTS) {
-      const bId = boardMap.get(tp.boardNumber);
-      if (bId) {
-        const tpRef = doc(collection(db, 'test_points'));
-        const tpData: TestPoint = {
-          id: tpRef.id,
-          boardId: bId,
-          reference: tp.reference,
-          netName: tp.netName,
-          layer: tp.layer,
-          x: tp.x,
-          y: tp.y,
-          expectedVoltage: tp.expectedVoltage,
-          expectedDiodeValue: tp.expectedDiodeValue
-        };
-        hardwareBatch.set(tpRef, tpData);
+        // Nets
+        for (const net of dataset.nets) {
+          const netRef = doc(collection(db, 'nets'));
+          const netData: Record<string, any> = {
+            id: netRef.id,
+            boardId: bId,
+            name: net.name
+          };
+          if (net.type !== undefined) netData.type = net.type;
+          if (net.voltage !== undefined) netData.voltage = net.voltage;
+          if (net.sourceComponent !== undefined) netData.sourceComponent = net.sourceComponent;
+          if (net.connectedComponents !== undefined) netData.connectedComponents = net.connectedComponents;
+          if (net.notes !== undefined) netData.notes = net.notes;
+
+          hardwareBatch.set(netRef, netData);
+        }
+
+        // Test Points
+        for (const tp of dataset.testPoints) {
+          const tpRef = doc(collection(db, 'test_points'));
+          const tpData: Record<string, any> = {
+            id: tpRef.id,
+            boardId: bId,
+            reference: tp.reference,
+            netName: tp.netName,
+            layer: tp.layer,
+            x: tp.x,
+            y: tp.y
+          };
+          if (tp.expectedVoltage !== undefined) tpData.expectedVoltage = tp.expectedVoltage;
+          if (tp.expectedDiodeValue !== undefined) tpData.expectedDiodeValue = tp.expectedDiodeValue;
+          if (tp.notes !== undefined) tpData.notes = tp.notes;
+
+          hardwareBatch.set(tpRef, tpData);
+        }
       }
     }
 

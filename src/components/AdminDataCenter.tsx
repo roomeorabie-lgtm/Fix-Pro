@@ -585,6 +585,52 @@ Xiaomi,Xiaomi Flagship,Xiaomi 13 Ultra,2304FPN6DC,M1_MAIN_BOARD_V2,SM8550,PM8550
 ]`}
             </pre>
           </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+            <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-amber-400" />
+              <span>نموذج استيراد المكونات والـ Nets وTPs (Hardware Blueprint)</span>
+            </h3>
+            <p className="text-xs text-slate-400">
+              تنسيق ربط المكونات والمسارات ونقاط القياس (Diode Readings) بالبوردة:
+            </p>
+            <pre className="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-[11px] font-mono text-slate-300 overflow-x-auto" dir="ltr">
+{`{
+  "boardNumber": "820-02537",
+  "components": [
+    {
+      "reference": "U1001",
+      "type": "IC",
+      "value": "APL109A",
+      "partNumber": "338S00799",
+      "layer": "top",
+      "x": 48,
+      "y": 36,
+      "connectedNets": ["PP_VDD_MAIN", "PP0V8_CPU_CORE"]
+    }
+  ],
+  "nets": [
+    {
+      "name": "PP_VDD_MAIN",
+      "type": "power",
+      "voltage": "3.80V - 4.35V",
+      "sourceComponent": "U3100 Charger"
+    }
+  ],
+  "testPoints": [
+    {
+      "reference": "TP101",
+      "netName": "PP_VDD_MAIN",
+      "layer": "top",
+      "x": 41,
+      "y": 32,
+      "expectedVoltage": "3.80V - 4.35V",
+      "expectedDiodeValue": "0.420V"
+    }
+  ]
+}`}
+            </pre>
+          </div>
         </div>
       )}
     </div>
